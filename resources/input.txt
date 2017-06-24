@@ -1,0 +1,21 @@
+symbol MM 45
+
+forward declarations
+function max_array return type integer 
+ parameters 
+       a array [] type integer 
+       num_elements  type integer
+
+global declarations
+constants
+   define MAX = 50a  type integer
+   define ARRAY_SIZE  100 type integer
+variables
+   define varm2 array[MM] of type integer
+   define var3  type integer 
+
+\
+
+<=
+a
+>=
