@@ -1,4 +1,5 @@
-package Lexer; /**
+package Lexer;
+/**
  * Created by Rob on 6/19/2017.
  *
  * Lexer.LexicalAnalyzer scans a file and returns
@@ -18,7 +19,7 @@ public class LexicalAnalyzer {
 
     public LexicalAnalyzer(File file) {
 
-        tokens = new ArrayList<Token>();
+        tokens = new ArrayList<>();
         int lineNumber = 0;
 
         try {
@@ -64,6 +65,7 @@ public class LexicalAnalyzer {
         // skip any whitespace at the beginning
         index = skipWhiteSpace(line, index);
 
+        try {
         // loop through all characters in the line
         while (index < line.length()) {
 
@@ -71,18 +73,23 @@ public class LexicalAnalyzer {
             String lexeme = getLexeme(line, lineNumber, index);
 
             // get the token type of the lexeme
-            TokenType tokType = getTokenType(lexeme, lineNumber, index);
 
-            // add the token to the token list
-            tokens.add(new Token(lineNumber + 1, index + 1, lexeme, tokType));
+                TokenType tokType = getTokenType(lexeme, lineNumber, index);
 
-            // move the index to the end of the lexeme in the string
-            index += lexeme.length();
+                // add the token to the token list
+                tokens.add(new Token(lineNumber + 1, index + 1, lexeme, tokType));
 
-            // skip more white space
-            index = skipWhiteSpace(line, index);
+                // move the index to the end of the lexeme in the string
+                index += lexeme.length();
+
+                // skip more white space
+                index = skipWhiteSpace(line, index);
 
         }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 
     // skipeWhiteSpace() will skip any whitespace between lexemes
@@ -120,10 +127,11 @@ public class LexicalAnalyzer {
 
 
     // getTokenType() takes a lexeme and matches and returns its Token Type
-    private TokenType getTokenType(String lexeme, int lineNumber, int columnNumber) {
+    private TokenType getTokenType(String lexeme, int lineNumber, int columnNumber) throws LexicalException {
 
         // make sure there's something to process
         assert (lexeme != null && lineNumber >= 1 && columnNumber >= 1);
+        System.out.println("line number: " + lineNumber + " columnNumber: " + columnNumber);
 
         TokenType tokType = null;
 
@@ -140,18 +148,22 @@ public class LexicalAnalyzer {
                 tokType = TokenType.INVALID_TOK;
         }
 
-        // check for identifiers
+        // check if lexeme matches identifier tokens
         if (Character.isLetter(firstChar)) {
 
             if (lexeme.matches("[a-zA-Z0-9]+"))
                 tokType = TokenType.ID_TOK;
+//            else
+//                throw new LexicalException("Error: invalid lexeme at line number: " + (lineNumber+1) + " and column " + (columnNumber+1));
 
         }
-        // check for constants
+        // check if lexeme matches constant tokens
         else if (Character.isDigit(firstChar)) {
 
             if (lexeme.matches("[0-9]+"))
                 tokType = TokenType.CONSTANT_TOK;
+//            else
+//                throw new LexicalException("Error: invalid lexeme at line number: " + (lineNumber+1) + " and column " + (columnNumber+1));
 
         }
         // check for operator tokens with 1 character

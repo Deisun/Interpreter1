@@ -21,8 +21,6 @@ public class RobsInterpreter {
 
     public static void main(String[] args ) {
 
-
-
         // check to see if argument was provided correctly for filename.ext
         if (args.length == 0) {
             System.out.println("Error: No filename was given.  Syntax: RobsInterpreter [filename.ext]");

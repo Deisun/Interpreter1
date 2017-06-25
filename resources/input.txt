@@ -14,8 +14,3 @@ variables
    define varm2 array[MM] of type integer
    define var3  type integer 
 
-\
-
-<=
-a
->=
