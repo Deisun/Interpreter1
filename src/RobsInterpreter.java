@@ -1,4 +1,4 @@
-/************************************************************************
+/*
  * Project           : Robs SCL Interpreter
  * Program name      : RobsInterpreter.java
  * Author            : Robert Douma
@@ -10,7 +10,7 @@
  *
  * Revision History  :
  *
- ***********************************************************************/
+ */
 
 import Lexer.LexicalAnalyzer;
 import Lexer.Token;
@@ -43,6 +43,7 @@ public class RobsInterpreter {
         }
     }
 
+
     // display the list of all tokens, token types and token codes
     private static void DisplayTokens(LexicalAnalyzer lexer) {
         System.out.printf("\n \t%-20s%20s%20s \n", "Lexeme", "Token Type", "Token Code");
@@ -52,4 +53,6 @@ public class RobsInterpreter {
             System.out.printf("\t%-20s%20s%20s \n", t.getLexeme(), t.getTokType(), t.getTokCode());
         }
     }
+
+
 }

@@ -52,7 +52,12 @@ public enum TokenType {
     SET_TOK                     ("41"),
     RETURN_TOK                  ("42"),
     EOS_TOK                     ("43"),
-    INVALID_TOK                 ("44");
+    LEFTPAREN_TOK               ("44"),
+    RIGHTPAREN_TOK              ("45"),
+    LEFTBRACKET_TOK             ("46"),
+    RIGHTBRACKET_TOK            ("47"),
+    LEFTRIGHTBRACKET_TOK        ("48"),
+    INVALID_TOK                 ("49");
 
     private final String tokCode;
 

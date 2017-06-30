@@ -1,5 +1,5 @@
 package Lexer;
-/**
+/*
  * Created by Rob on 6/19/2017.
  *
  * Lexer.LexicalAnalyzer scans a file and returns
@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 
 
 public class LexicalAnalyzer {
@@ -73,17 +74,16 @@ public class LexicalAnalyzer {
             String lexeme = getLexeme(line, lineNumber, index);
 
             // get the token type of the lexeme
+            TokenType tokType = getTokenType(lexeme, lineNumber, index);
 
-                TokenType tokType = getTokenType(lexeme, lineNumber, index);
+            // add the token to the token list
+            tokens.add(new Token(lineNumber + 1, index + 1, lexeme, tokType));
 
-                // add the token to the token list
-                tokens.add(new Token(lineNumber + 1, index + 1, lexeme, tokType));
+            // move the index to the end of the lexeme in the string
+            index += lexeme.length();
 
-                // move the index to the end of the lexeme in the string
-                index += lexeme.length();
-
-                // skip more white space
-                index = skipWhiteSpace(line, index);
+            // skip more white space
+            index = skipWhiteSpace(line, index);
 
         }
         } catch (Exception ex) {
@@ -92,7 +92,7 @@ public class LexicalAnalyzer {
 
     }
 
-    // skipeWhiteSpace() will skip any whitespace between lexemes
+    // skipWhiteSpace() will skip any whitespace between lexemes
     private int skipWhiteSpace(String line, int index) {
 
         // make sure there's something to process
@@ -131,7 +131,6 @@ public class LexicalAnalyzer {
 
         // make sure there's something to process
         assert (lexeme != null && lineNumber >= 1 && columnNumber >= 1);
-        System.out.println("line number: " + lineNumber + " columnNumber: " + columnNumber);
 
         TokenType tokType = null;
 
@@ -151,10 +150,10 @@ public class LexicalAnalyzer {
         // check if lexeme matches identifier tokens
         if (Character.isLetter(firstChar)) {
 
-            if (lexeme.matches("[a-zA-Z0-9]+"))
+            if (lexeme.matches("[a-zA-Z0-9_]+"))
                 tokType = TokenType.ID_TOK;
-//            else
-//                throw new LexicalException("Error: invalid lexeme at line number: " + (lineNumber+1) + " and column " + (columnNumber+1));
+            else
+                throw new LexicalException("Error: invalid lexeme at line number: " + (lineNumber+1) + " and column " + (columnNumber+1));
 
         }
         // check if lexeme matches constant tokens
@@ -162,8 +161,8 @@ public class LexicalAnalyzer {
 
             if (lexeme.matches("[0-9]+"))
                 tokType = TokenType.CONSTANT_TOK;
-//            else
-//                throw new LexicalException("Error: invalid lexeme at line number: " + (lineNumber+1) + " and column " + (columnNumber+1));
+            else
+                throw new LexicalException("Error: invalid lexeme at line number: " + (lineNumber+1) + " and column " + (columnNumber+1));
 
         }
         // check for operator tokens with 1 character
@@ -199,6 +198,22 @@ public class LexicalAnalyzer {
                     tokType = TokenType.GT_TOK;
                     break;
 
+                case "[":
+                    tokType = TokenType.LEFTBRACKET_TOK;
+                    break;
+
+                case "]":
+                    tokType = TokenType.RIGHTBRACKET_TOK;
+                    break;
+
+                case "(":
+                    tokType = TokenType.LEFTPAREN_TOK;
+                    break;
+
+                case ")":
+                    tokType = TokenType.RIGHTPAREN_TOK;
+                    break;
+
                 default:
                     tokType = TokenType.INVALID_TOK;
             }
@@ -222,6 +237,10 @@ public class LexicalAnalyzer {
 
                 case "!=":
                     tokType = TokenType.NE_TOK;
+                    break;
+
+                case "[]":
+                    tokType = TokenType.LEFTRIGHTBRACKET_TOK;
                     break;
 
                 default:
