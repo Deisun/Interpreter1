@@ -1,11 +1,11 @@
-package Lexer;
-
 /**
  * Created by Rob on 6/21/2017.
  *
  * Contains all the pre-defined keywords of the SCL subset language
  *
  */
+
+package Lexer;
 
 public enum Keyword {
 
@@ -38,7 +38,11 @@ public enum Keyword {
     ENDREPEAT_KEYWORD      ("endrepeat", TokenType.ENDREPEAT_TOK),
     DISPLAY_KEYWORD        ("display", TokenType.DISPLAY_TOK),
     SET_KEYWORD            ("set", TokenType.SET_TOK),
-    RETURN_KEYWORD         ("return", TokenType.RETURN_TOK);
+    RETURN_KEYWORD         ("return", TokenType.RETURN_TOK),
+    DEFINE_KEYWORD         ("define", TokenType.DEFINE_TOK),
+    WHILE_KEYWORD          ("while", TokenType.WHILE_TOK),
+    ENDWHILE_KEYWORD       ("endwhile", TokenType.ENDWHILE_TOK),
+    DO_KEYWORD             ("do", TokenType.DO_TOK);
     
 
     private final String lexeme;

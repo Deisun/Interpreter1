@@ -1,4 +1,3 @@
-package Lexer;
 /*
  * Created by Rob on 6/19/2017.
  *
@@ -6,6 +5,8 @@ package Lexer;
  * a list of tokens based on the rules and conditions of the language
  *
  */
+
+package Lexer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,12 +18,18 @@ import java.util.Scanner;
 public class LexicalAnalyzer {
 
     private List<Token> tokens;
+    private int lineNumber;
+    private static int tokIndex;
 
-    public LexicalAnalyzer(File file) {
 
-        tokens = new ArrayList<>();
-        int lineNumber = 0;
+    public LexicalAnalyzer() {
 
+        this.tokens = new ArrayList<>();
+        this.lineNumber = 0;
+        tokIndex = 0;
+    }
+
+    public void analyze(File file) {
         try {
 
             // try opening file
@@ -43,18 +50,21 @@ public class LexicalAnalyzer {
             // at the end of the token list, we add an EOS - End of String token
             tokens.add(new Token (lineNumber, 1, "EOS", TokenType.EOS_TOK));
 
+
             // close the file
             input.close();
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
-    public List<Token> getTokens() {
-        return tokens;
+    public Token getNextToken() {
+        Token tok = tokens.get(tokIndex);
+        tokIndex++;
+        return tok;
     }
+
 
     // processLine() will take a line and process it to look for tokens
     private void processLine(String line, int lineNumber) {
@@ -67,30 +77,30 @@ public class LexicalAnalyzer {
         index = skipWhiteSpace(line, index);
 
         try {
-        // loop through all characters in the line
-        while (index < line.length()) {
+            // loop through all characters in the line
+            while (index < line.length()) {
 
-            // get the next lexeme
-            String lexeme = getLexeme(line, lineNumber, index);
+                // get the next lexeme
+                String lexeme = getLexeme(line, lineNumber, index);
 
-            // get the token type of the lexeme
-            TokenType tokType = getTokenType(lexeme, lineNumber, index);
+                // get the token type of the lexeme
+                TokenType tokType = getTokenType(lexeme, lineNumber, index);
 
-            // add the token to the token list
-            tokens.add(new Token(lineNumber + 1, index + 1, lexeme, tokType));
+                // add the token to the token list
+                tokens.add(new Token(lineNumber + 1, index + 1, lexeme, tokType));
 
-            // move the index to the end of the lexeme in the string
-            index += lexeme.length();
+                // move the index to the end of the lexeme in the string
+                index += lexeme.length();
 
-            // skip more white space
-            index = skipWhiteSpace(line, index);
-
-        }
+                // skip more white space
+                index = skipWhiteSpace(line, index);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }
+
 
     // skipWhiteSpace() will skip any whitespace between lexemes
     private int skipWhiteSpace(String line, int index) {
@@ -104,6 +114,7 @@ public class LexicalAnalyzer {
 
         return index;
     }
+
 
     // getLexeme() takes a string line and returns a luxeme
     private String getLexeme(String line, int lineNumber, int index) {
@@ -136,6 +147,7 @@ public class LexicalAnalyzer {
 
         // get the first character
         Character firstChar = lexeme.charAt(0);
+
 
 
         // check for keywords first
@@ -214,6 +226,11 @@ public class LexicalAnalyzer {
                     tokType = TokenType.RIGHTPAREN_TOK;
                     break;
 
+                case ",":
+                    tokType = TokenType.COMMA_TOK;
+                    break;
+
+
                 default:
                     tokType = TokenType.INVALID_TOK;
             }
@@ -249,7 +266,16 @@ public class LexicalAnalyzer {
         }
 
         return tokType;
-
     }
 
+
+
+    private  void DisplayTokens() {
+        System.out.printf("\n \t%-20s%20s%20s \n", "Lexeme", "Token Type", "Token Code");
+        System.out.printf("\t%-20s \n", "-------------------------------------------------------------");
+        for (Token t : tokens) {
+
+            System.out.printf("\t%-20s%20s%20s \n", t.getLexeme(), t.getTokType(), t.getTokCode());
+        }
+    }
 }

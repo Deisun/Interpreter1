@@ -1,11 +1,10 @@
-package Lexer;
-
 /**
  * Created by Rob on 6/19/2017.
  *
  * A list of possible Lexer.Token types
  *
  */
+package Lexer;
 
 public enum TokenType {
 
@@ -57,7 +56,12 @@ public enum TokenType {
     LEFTBRACKET_TOK             ("46"),
     RIGHTBRACKET_TOK            ("47"),
     LEFTRIGHTBRACKET_TOK        ("48"),
-    INVALID_TOK                 ("49");
+    DEFINE_TOK                  ("49"),
+    WHILE_TOK                   ("50"),
+    DO_TOK                      ("51"),
+    ENDWHILE_TOK                ("52"),
+    COMMA_TOK                   ("53"),
+    INVALID_TOK                 ("99");
 
     private final String tokCode;
 

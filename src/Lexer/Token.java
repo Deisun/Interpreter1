@@ -1,5 +1,3 @@
-package Lexer;
-
 /**
  * Created by Rob on 6/19/2017.
  *
@@ -8,12 +6,14 @@ package Lexer;
  *
  */
 
+package Lexer;
+
+
 public class Token {
 
     private int rowNumber;
     private int colNumber;
     private String tokCode;
-
     private String lexeme;
     private TokenType tokType;
 

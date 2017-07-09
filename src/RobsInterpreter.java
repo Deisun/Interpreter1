@@ -8,14 +8,12 @@
  *
  * Purpose           : To implement a SCL subset interpreter using Java
  *
- * Revision History  :
- *
  */
 
 import Lexer.LexicalAnalyzer;
-import Lexer.Token;
-
+import Parser.SyntaxAnalyzer;
 import java.io.*;
+
 
 public class RobsInterpreter {
 
@@ -34,23 +32,20 @@ public class RobsInterpreter {
                 System.out.println("Error: No filename exists at: " + file.toString());
             } else {
 
-                // get Lexical Analyzer object to scan files with
-                LexicalAnalyzer lexer = new LexicalAnalyzer(file);
+                // create Lexical Analyzer object to scan files with
+                LexicalAnalyzer lexer = new LexicalAnalyzer();
+
+                lexer.analyze(file);
+                // create Syntax Analyzer object to parse tokens
+                SyntaxAnalyzer parser = new SyntaxAnalyzer(lexer);
+
+                parser.parse();
+
 
                 // show resulting token list after lexical analysis of the file
-                DisplayTokens(lexer);
+                // DisplayTokens(tokens);
+
             }
-        }
-    }
-
-
-    // display the list of all tokens, token types and token codes
-    private static void DisplayTokens(LexicalAnalyzer lexer) {
-        System.out.printf("\n \t%-20s%20s%20s \n", "Lexeme", "Token Type", "Token Code");
-        System.out.printf("\t%-20s \n", "-------------------------------------------------------------");
-        for (Token t : lexer.getTokens()) {
-
-            System.out.printf("\t%-20s%20s%20s \n", t.getLexeme(), t.getTokType(), t.getTokCode());
         }
     }
 
