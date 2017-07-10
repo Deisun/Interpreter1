@@ -38,28 +38,30 @@ public class SyntaxAnalyzer {
      */
     private void start() {
 
-        while (nextToken.getTokType() != TokenType.EOS_TOK) {
-
             if (nextToken.getTokType() == TokenType.SYMBOL_TOK) {
+
                 // parse symbols
                 symbols();
             }
-            else if (nextToken.getTokType() == TokenType.FORWARD_TOK) {
+
+            if (nextToken.getTokType() == TokenType.FORWARD_TOK) {
 
                 // parse forward_refs
                 forward_refs();
             }
-            else if (nextToken.getTokType() == TokenType.GLOBAL_TOK) {
+
+            if (nextToken.getTokType() == TokenType.GLOBAL_TOK) {
 
                 // parse globals()
                 globals();
             }
-            else if (nextToken.getTokType() == TokenType.IMPLEMENTATIONS_TOK) {
+
+            if (nextToken.getTokType() == TokenType.IMPLEMENTATIONS_TOK) {
 
                 // parse implement()
                 implement();
             }
-        }
+
 
     }
 
@@ -76,11 +78,7 @@ public class SyntaxAnalyzer {
             // check for symbol token
             while (nextToken.getTokType() == TokenType.SYMBOL_TOK) {
 
-                // show token
-                printToken();
-
-                // consume the token
-                nextToken = lexer.getNextToken();
+                lex();
 
                 // parse symbols_def
                 symbols_def();
@@ -106,12 +104,15 @@ public class SyntaxAnalyzer {
 
         } else {
 
-            // show token
-            printToken();
+            lex();
 
-            // consume the token
-            nextToken = lexer.getNextToken();
+            if (nextToken.getTokType() != TokenType.INT_TOK) {
+                error("constant");
+            } else {
 
+                lex();
+
+            }
 
         }
 
@@ -130,11 +131,7 @@ public class SyntaxAnalyzer {
             // check for FORWARD keyword
             if (nextToken.getTokType() == TokenType.FORWARD_TOK) {
 
-                // show token
-                printToken();
-
-                // consume the token
-                nextToken = lexer.getNextToken();
+                lex();
 
                 // parse frefs
                 frefs();
@@ -155,26 +152,21 @@ public class SyntaxAnalyzer {
         // check for REFERENCES keyword and DECLARATIONS keyword
         if (nextToken.getTokType() == TokenType.REFERENCES_TOK) {
 
-            // show token
-            printToken();
+            lex();
 
-            // consume the token
-            nextToken = lexer.getNextToken();
-
-
+            // parse forward_list()
+            forward_list();
         }
         // check for DECLARATIONS keyword
         else if (nextToken.getTokType() == TokenType.DECLARATIONS_TOK) {
 
-            // show token
-            printToken();
+            lex();
 
-            // consume the token
-            nextToken = lexer.getNextToken();
+            // parse forward_list()
+            forward_list();
         }
 
-        // parse forward_list()
-        forward_list();
+
 
 
         System.out.println("Exit <frefs>");
@@ -191,6 +183,10 @@ public class SyntaxAnalyzer {
 
         // parse forwards
         forwards();
+
+        while (nextToken.getTokType() == TokenType.FUNCTION_TOK) {
+            forwards();
+        }
 
         System.out.println("Exit <forward_list>");
     }
@@ -226,30 +222,19 @@ public class SyntaxAnalyzer {
 
         if (nextToken.getTokType() == TokenType.FUNCTION_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             if (nextToken.getTokType() == TokenType.ID_TOK) {
 
-                // show the token
-                printToken();
-
-                // consume token
-                nextToken = lexer.getNextToken();
+                lex();
 
                 // parse oper_type
                 oper_type();
 
             } else if (nextToken.getTokType() == TokenType.MAIN_TOK) {
 
-                // show the token
-                printToken();
+                lex();
 
-                // consume token
-                nextToken = lexer.getNextToken();
             } else {
                 error("identifer or Main");
             }
@@ -276,11 +261,7 @@ public class SyntaxAnalyzer {
 
         } else {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse chk_array
             chk_array();
@@ -307,11 +288,7 @@ public class SyntaxAnalyzer {
         // check for ARRAY keyword
         if (nextToken.getTokType() == TokenType.ARRAY_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse array_dim_list
             array_dim_list();
@@ -337,11 +314,7 @@ public class SyntaxAnalyzer {
         // check for TYPE keyword
         if (nextToken.getTokType() == TokenType.TYPE_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse type_name
             type_name();
@@ -350,11 +323,7 @@ public class SyntaxAnalyzer {
         // check for STRUCT keyword
         else if (nextToken.getTokType() == TokenType.STRUCT_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
 
             // check for identifier
@@ -366,11 +335,7 @@ public class SyntaxAnalyzer {
             }
             else {
 
-                // show the token
-                printToken();
-
-                // consume token
-                nextToken = lexer.getNextToken();
+                lex();
             }
         }
         // didnt get correct keywords, so error
@@ -396,21 +361,15 @@ public class SyntaxAnalyzer {
 
         if (nextToken.getTokType() == TokenType.LEFTBRACKET_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse array_index
             array_index();
 
             if (nextToken.getTokType() == TokenType.RIGHTBRACKET_TOK) {
-                // show the token
-                printToken();
 
-                // consume token
-                nextToken = lexer.getNextToken();
+                lex();
+
             } else {
 
                 // expected right bracket but got something else, error
@@ -440,11 +399,7 @@ public class SyntaxAnalyzer {
 
         } else {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
 
         System.out.println("Exit <array_index>");
@@ -472,11 +427,8 @@ public class SyntaxAnalyzer {
 
         else {
 
-            // show the token
-            printToken();
+            lex();
 
-            // consume token
-            nextToken = lexer.getNextToken();
         }
 
 
@@ -501,11 +453,7 @@ public class SyntaxAnalyzer {
 
         if (nextToken.getTokType() == TokenType.GLOBAL_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse declarations
             declarations();
@@ -528,11 +476,7 @@ public class SyntaxAnalyzer {
 
         if (nextToken.getTokType() == TokenType.DECLARATIONS_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse const_dec
             const_dec();
@@ -554,21 +498,20 @@ public class SyntaxAnalyzer {
     private void const_dec() {
         System.out.println("Enter <const_dec>");
 
-        if (nextToken.getTokType() != TokenType.CONSTANT_TOK) {
+        if (nextToken.getTokType() != TokenType.CONSTANTS_TOK) {
 
-            error("CONSTANT");
+            error("CONSTANTS");
 
         } else {
 
 
-            // show the token
-            printToken();
+            lex();
 
-            // consume token
-            nextToken = lexer.getNextToken();
 
             // parse const_list
-            const_list();
+                const_list();
+
+
         }
 
         System.out.println("Exit <const_dec>");
@@ -584,16 +527,6 @@ public class SyntaxAnalyzer {
     private void const_list() {
         System.out.println("Enter <const_list>");
 
-        while (nextToken.getTokType() == TokenType.CONSTANT_TOK) {
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
-
-            // parse const_list
-            const_list();
-        }
 
         // check for DEFINE keyword
         if (nextToken.getTokType() != TokenType.DEFINE_TOK) {
@@ -602,32 +535,134 @@ public class SyntaxAnalyzer {
 
         } else {
 
-            // show the token
-            printToken();
+            while (nextToken.getTokType() != TokenType.DEFINE_TOK) {
 
-            // consume token
-            nextToken = lexer.getNextToken();
+                lex();
 
-            // check for Identifier
-            if (nextToken.getTokType() != TokenType.ID_TOK) {
-
-                error("Identifier");
-
-            } else {
-                // show the token
-                printToken();
-
-                // consume token
-                nextToken = lexer.getNextToken();
+                // parse identifier
+                identifier();
 
                 // parse rec_type
-                // TODO  (Asked Garrido about rec_type ????
-                // rec_type();
+                rec_type();
+
+                // parse equal_op
+                equal_op();
+
+                // parse constant_val
+                constant_val();
+
             }
         }
 
         System.out.println("Exit <const_list>");
     }
+
+
+    /* identifier()
+    parses strings in the language generated by the rule:
+    identifier : ID_TOK
+        ;
+    */
+    public void identifier() {
+        System.out.println("Enter <identifier>");
+
+        if (nextToken.getTokType() != TokenType.ID_TOK) {
+            error("Identifier");
+        } else {
+
+            lex();
+        }
+        System.out.println("Exit <identifier>");
+    }
+
+
+
+    /* equal_op()
+    parses strings in the language generated by the rule:
+    equal_op : =
+        ;
+    */
+    public void constant_val() {
+        System.out.println("Enter <constant_val>");
+
+        if (nextToken.getTokType() != TokenType.INT_TOK) {
+            error("Constant Value");
+        } else {
+
+            lex();
+
+        }
+
+        System.out.println("Exit <constant_val>");
+    }
+
+
+
+    /* equal_op()
+    parses strings in the language generated by the rule:
+    constant_val : integer
+        ;
+    */
+    public void equal_op() {
+        System.out.println("Enter <equal_op>");
+
+        if (nextToken.getTokType() != TokenType.ASSIGN_TOK) {
+            error("=");
+        } else {
+
+            lex();
+
+        }
+
+        System.out.println("Exit <equal_op>");
+    }
+
+
+
+    /* rec_type()
+    parses strings in the language generated by the rule:
+    var_dec : VARIABLES var_list
+        ;
+    */
+    private void rec_type() {
+        System.out.println("Enter <rec_type>");
+
+        if (nextToken.getTokType() != TokenType.ASSIGN_TOK) {
+            error("=");
+        }
+        else {
+
+            lex();
+
+            if (nextToken.getTokType() != TokenType.INT_TOK) {
+                error("int");
+            } else {
+
+                lex();
+
+                if (nextToken.getTokType() != TokenType.TYPE_TOK) {
+                    error("TYPE");
+                } else {
+
+                    lex();
+
+                    if (nextToken.getTokType() != TokenType.INTEGER_TOK) {
+                        error("INTEGER");
+                    } else {
+
+                        lex();
+
+                    }
+                }
+            }
+
+
+        }
+
+        System.out.println("Exit <rec_type>");
+    }
+
+
 
 
     /* var_dec()
@@ -638,12 +673,65 @@ public class SyntaxAnalyzer {
     private void var_dec() {
         System.out.println("Enter <var_dec>");
 
-        // parse rec_type
-        // TODO  (Asked Garrido about rec_type ????
-        // rec_type();
 
+        if (nextToken.getTokType() != TokenType.VARIABLES_TOK) {
+            error("VARIABLES");
+        } else {
+
+            lex();
+
+            // parse var_list
+            var_list();
+
+        }
 
         System.out.println("Exit <var_dec>");
+    }
+
+
+
+    /* var_list()
+    parses strings in the language generated by the rule:
+    var_list : var_list DEFINE identifier rec_type
+         ;
+    */
+    private void var_list() {
+        System.out.println("Enter <var_list>");
+
+        if (nextToken.getTokType() != TokenType.DEFINE_TOK) {
+            error("DEFINE");
+        } else {
+
+            while (nextToken.getTokType() == TokenType.DEFINE_TOK) {
+
+                lex();
+
+                if (nextToken.getTokType() != TokenType.ID_TOK) {
+                    error("identifier");
+                } else {
+
+                    lex();
+
+                    if (nextToken.getTokType() != TokenType.TYPE_TOK) {
+                        error("TYPE");
+                    } else {
+
+                        lex();
+
+                        if (nextToken.getTokType() != TokenType.INTEGER_TOK) {
+                            error("INTEGER");
+                        } else {
+
+                            lex();
+
+                        }
+                    }
+                }
+            }
+
+        }
+
+        System.out.println("Exit <var_list>");
     }
 
 
@@ -665,11 +753,8 @@ public class SyntaxAnalyzer {
             error("IMPLEMENT");
 
         } else {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse func_list
             funct_list();
@@ -726,11 +811,8 @@ public class SyntaxAnalyzer {
         if (nextToken.getTokType() != TokenType.FUNCTION_TOK) {
             error("FUNCTION");
         } else {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse main_head
             main_head();
@@ -759,20 +841,14 @@ public class SyntaxAnalyzer {
         System.out.println("Enter <main_head>");
 
         if (nextToken.getTokType() == TokenType.MAIN_TOK) {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
         }
 
         else if (nextToken.getTokType() == TokenType.ID_TOK) {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
         }
 
@@ -800,11 +876,8 @@ public class SyntaxAnalyzer {
         }
 
         else {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse param_list
             param_list();
@@ -850,11 +923,7 @@ public class SyntaxAnalyzer {
 
         } else {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse chk_const
             chk_const();
@@ -870,11 +939,7 @@ public class SyntaxAnalyzer {
                 error("TYPE");
             } else {
 
-                // show the token
-                printToken();
-
-                // consume token
-                nextToken = lexer.getNextToken();
+                lex();
 
                 // parse type_name
                 type_name();
@@ -895,15 +960,12 @@ public class SyntaxAnalyzer {
     private void chk_const() {
         System.out.println("Enter <chk_const>");
 
-        if (nextToken.getTokType() != TokenType.CONSTANT_TOK) {
+        if (nextToken.getTokType() != TokenType.CONSTANTS_TOK) {
             error("CONSTANT");
         }
         else {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
 
 
@@ -927,11 +989,7 @@ public class SyntaxAnalyzer {
             error("BEGIN");
         } else {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse statement_list
             statement_list();
@@ -939,11 +997,9 @@ public class SyntaxAnalyzer {
             if (nextToken.getTokType() != TokenType.ENDFUN_TOK) {
                 error("BEGIN");
             } else {
-                // show the token
-                printToken();
 
-                // consume token
-                nextToken = lexer.getNextToken();
+                lex();
+
             }
         }
         System.out.println("Exit <f_body>");
@@ -983,44 +1039,32 @@ public class SyntaxAnalyzer {
         System.out.println("Enter <statement>");
 
         if (nextToken.getTokType() == TokenType.IF_TOK) {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse if_statement
             if_statement();
         }
 
         else if (nextToken.getTokType() == TokenType.SET_TOK) {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse if_statement
             assignment_statement();
         }
 
         else if (nextToken.getTokType() == TokenType.WHILE_TOK) {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse while_statement
             while_statement();
         }
 
         else if (nextToken.getTokType() == TokenType.REPEAT_TOK) {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             // parse repeat_statement
             repeat_statement();
@@ -1051,11 +1095,7 @@ public class SyntaxAnalyzer {
                 error("THEN");
             } else {
 
-                // show the token
-                printToken();
-
-                // consume token
-                nextToken = lexer.getNextToken();
+                lex();
 
                 // parse statement_list
                 statement_list();
@@ -1064,11 +1104,7 @@ public class SyntaxAnalyzer {
                     error("ELSE");
                 } else {
 
-                    // show the token
-                    printToken();
-
-                    // consume token
-                    nextToken = lexer.getNextToken();
+                    lex();
 
                     // parse statement_list
                     statement_list();
@@ -1078,11 +1114,7 @@ public class SyntaxAnalyzer {
                         error("ENDIF");
                     } else {
 
-                        // show the token
-                        printToken();
-
-                        // consume token
-                        nextToken = lexer.getNextToken();
+                        lex();
 
                     }
                 }
@@ -1109,11 +1141,7 @@ public class SyntaxAnalyzer {
                 error("DO");
             } else {
 
-                // show the token
-                printToken();
-
-                // consume token
-                nextToken = lexer.getNextToken();
+                lex();
 
                 // parse statement_list
                 statement_list();
@@ -1122,11 +1150,7 @@ public class SyntaxAnalyzer {
                     error("ENDWHILE");
                 } else {
 
-                    // show the token
-                    printToken();
-
-                    // consume token
-                    nextToken = lexer.getNextToken();
+                    lex();
 
                 }
             }
@@ -1149,22 +1173,13 @@ public class SyntaxAnalyzer {
             error("Identifier");
         } else {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
             if (nextToken.getTokType() != TokenType.ASSIGN_TOK) {
                 error("=");
             } else {
 
-                // show token
-                printToken();
-
-                // consume token
-                nextToken = lexer.getNextToken();
-
+                lex();
 
                 // parse arithmetic_expression
                 arithmetic_exp();
@@ -1246,15 +1261,11 @@ public class SyntaxAnalyzer {
     private void args() {
         System.out.println("Enter <args>");
 
-        if (nextToken.getTokType() != TokenType.ID_TOK || nextToken.getTokType() != TokenType.CONSTANT_TOK) {
+        if (nextToken.getTokType() != TokenType.ID_TOK || nextToken.getTokType() != TokenType.INT_TOK) {
             error("identifier or constant");
         } else {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
 
 
@@ -1273,57 +1284,33 @@ public class SyntaxAnalyzer {
 
         if (nextToken.getTokType() == TokenType.LE_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
 
         else if (nextToken.getTokType() == TokenType.LT_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
 
         else if (nextToken.getTokType() == TokenType.GE_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
         else if (nextToken.getTokType() == TokenType.GT_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
         else if (nextToken.getTokType() == TokenType.EQ_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
         else if (nextToken.getTokType() == TokenType.NE_TOK) {
 
-            // show the token
-            printToken();
-
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
         }
         else {
 
-            //error
+            // error
             error("relative operator");
         }
 
@@ -1344,38 +1331,26 @@ public class SyntaxAnalyzer {
         System.out.println("Enter <arithmetic_expression>");
 
         if (nextToken.getTokType() == TokenType.ADD_TOK) {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
         }
 
         else if (nextToken.getTokType() == TokenType.SUB_TOK) {
-            // show the token
-            printToken();
 
-            // consume token
-            nextToken = lexer.getNextToken();
+            lex();
 
         }
 
         else if (nextToken.getTokType() == TokenType.MUL_TOK) {
-        // show the token
-        printToken();
 
-        // consume token
-        nextToken = lexer.getNextToken();
+            lex();
 
         }
 
         else if (nextToken.getTokType() == TokenType.DIV_TOK) {
-        // show the token
-        printToken();
 
-        // consume token
-        nextToken = lexer.getNextToken();
+            lex();
 
         }
 
@@ -1392,7 +1367,13 @@ public class SyntaxAnalyzer {
 
 
 
+    private void lex() {
+        // show the token
+        printToken();
 
+        // consume token
+        nextToken = lexer.getNextToken();
+    }
 
 
     private void printToken() {

@@ -172,7 +172,7 @@ public class LexicalAnalyzer {
         else if (Character.isDigit(firstChar)) {
 
             if (lexeme.matches("[0-9]+"))
-                tokType = TokenType.CONSTANT_TOK;
+                tokType = TokenType.INT_TOK;
             else
                 throw new LexicalException("Error: invalid lexeme at line number: " + (lineNumber+1) + " and column " + (columnNumber+1));
 

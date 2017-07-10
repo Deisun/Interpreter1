@@ -37,7 +37,7 @@ public enum TokenType {
     IMPLEMENTATIONS_TOK         ("26"),
     MAIN_TOK                    ("27"),
     PARAMETERS_TOK              ("28"),
-    CONSTANT_TOK                ("29"),
+    CONSTANTS_TOK               ("29"),
     BEGIN_TOK                   ("30"),
     ENDFUN_TOK                  ("31"),
     IF_TOK                      ("32"),
@@ -61,6 +61,8 @@ public enum TokenType {
     DO_TOK                      ("51"),
     ENDWHILE_TOK                ("52"),
     COMMA_TOK                   ("53"),
+    INT_TOK                     ("54"),
+    VARIABLES_TOK               ("55"),
     INVALID_TOK                 ("99");
 
     private final String tokCode;

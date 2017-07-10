@@ -26,7 +26,7 @@ public enum Keyword {
     IMPLEMENTATIONS_KEYWORD("implementations", TokenType.IMPLEMENTATIONS_TOK),
     MAIN_KEYWORD           ("main", TokenType.MAIN_TOK),
     PARAMETERS_KEYWORD     ("parameters", TokenType.PARAMETERS_TOK),
-    CONSTANT_KEYWORD       ("constant", TokenType.CONSTANT_TOK),
+    CONSTANTS_KEYWORD       ("constants", TokenType.CONSTANTS_TOK),
     BEGIN_KEYWORD          ("begin", TokenType.BEGIN_TOK),
     ENDFUN_KEYWORD         ("endfun", TokenType.ENDFUN_TOK),
     IF_KEYWORD             ("if", TokenType.IF_TOK),
@@ -42,6 +42,7 @@ public enum Keyword {
     DEFINE_KEYWORD         ("define", TokenType.DEFINE_TOK),
     WHILE_KEYWORD          ("while", TokenType.WHILE_TOK),
     ENDWHILE_KEYWORD       ("endwhile", TokenType.ENDWHILE_TOK),
+    VARIABLES_KEYWORD      ("variables", TokenType.VARIABLES_TOK),
     DO_KEYWORD             ("do", TokenType.DO_TOK);
     
 
